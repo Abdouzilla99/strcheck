@@ -1,2 +1,0 @@
-# strcheck
-Stripe checkout
