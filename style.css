@@ -15797,3 +15797,340 @@ input {
     #finished-section h1 { font-size: 24px; }
     #finished-section p { font-size: 15px; }
 }
+
+/* ==============================================
+   VERIFICATION PAGE CSS - Add to END of mystyle.css
+   ============================================== */
+
+#verification-section {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #f6f9fc;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+    overflow-y: auto;
+    padding: 20px;
+}
+
+.verification-card {
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 15px 35px rgba(50, 50, 93, 0.1), 0 5px 15px rgba(0, 0, 0, 0.07);
+    width: 100%;
+    max-width: 480px;
+    padding: 40px;
+    text-align: center;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+    box-sizing: border-box;
+    /* Center horizontally and vertically */
+    margin: 0 auto;
+    position: relative;
+}
+
+.verification-card:hover {
+    box-shadow: 0 7px 14px rgba(50, 50, 93, 0.1), 0 3px 6px rgba(0, 0, 0, 0.08);
+}
+
+.verification-header {
+    margin-bottom: 32px;
+}
+
+.verification-icon {
+    background-color: rgba(103, 114, 229, 0.1);
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+    color: #6772e5;
+    font-size: 24px;
+}
+
+.verification-title {
+    font-size: 28px;
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: #1a1f36;
+    line-height: 1.3;
+}
+
+.verification-subtitle {
+    font-size: 16px;
+    color: #6b7c93;
+    margin-bottom: 8px;
+    line-height: 1.5;
+}
+
+.phone-number {
+    font-weight: 600;
+    color: #1a1f36;
+    background-color: rgba(103, 114, 229, 0.05);
+    padding: 6px 12px;
+    border-radius: 20px;
+    display: inline-block;
+    margin-top: 8px;
+}
+
+.otp-section {
+    margin-bottom: 32px;
+}
+
+.otp-label {
+    display: block;
+    text-align: left;
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 8px;
+    color: #1a1f36;
+}
+
+.otp-input-container {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    direction: ltr;
+}
+
+.otp-input {
+    width: 52px;
+    height: 60px;
+    text-align: center;
+    font-size: 24px;
+    font-weight: 500;
+    border: 1.5px solid #e6ebf1;
+    border-radius: 8px;
+    background-color: white;
+    color: #1a1f36;
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+}
+
+.otp-input:focus {
+    border-color: #6772e5;
+    box-shadow: 0 0 0 3px rgba(103, 114, 229, 0.15);
+    outline: none;
+}
+
+.otp-input.filled {
+    border-color: #6772e5;
+}
+
+.otp-input.error {
+    border-color: #e25950;
+}
+
+.otp-hint {
+    font-size: 14px;
+    color: #8898aa;
+    text-align: left;
+    margin-top: 8px;
+    line-height: 1.5;
+}
+
+.resend-section {
+    margin-bottom: 32px;
+    padding: 16px;
+    background-color: rgba(246, 249, 252, 0.8);
+    border-radius: 8px;
+}
+
+.resend-text {
+    font-size: 15px;
+    color: #6b7c93;
+    margin-bottom: 12px;
+    line-height: 1.5;
+}
+
+.resend-link {
+    color: #6772e5;
+    text-decoration: none;
+    font-weight: 600;
+    cursor: pointer;
+    transition: color 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.resend-link:hover {
+    color: #5469d4;
+}
+
+.resend-link.disabled {
+    color: #8898aa;
+    cursor: not-allowed;
+}
+
+.countdown {
+    font-weight: 600;
+    color: #1a1f36;
+}
+
+.verify-button {
+    background-color: #6772e5;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 18px 24px;
+    font-size: 16px;
+    font-weight: 600;
+    width: 100%;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.verify-button:hover:not(:disabled) {
+    background-color: #5469d4;
+}
+
+.verify-button:active:not(:disabled) {
+    transform: translateY(1px);
+}
+
+.verify-button:disabled {
+    background-color: #a0a7e0;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.verify-button i {
+    margin-left: 8px;
+}
+
+.verification-footer {
+    border-top: 1px solid #e6ebf1;
+    padding-top: 20px;
+    font-size: 14px;
+}
+
+.footer-links {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.footer-link {
+    color: #8898aa;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.footer-link:hover {
+    color: #6772e5;
+}
+
+.status-message {
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-size: 14px;
+    display: none;
+}
+
+.status-message.success {
+    background-color: rgba(36, 180, 126, 0.1);
+    color: #24b47e;
+    display: block;
+}
+
+.status-message.error {
+    background-color: rgba(226, 89, 80, 0.1);
+    color: #e25950;
+    display: block;
+}
+
+/* Loading overlay for SMS page */
+#sms-loading-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: 20000;
+    justify-content: center;
+    align-items: center;
+}
+
+.sms-spinner {
+    width: 80px;
+    height: 80px;
+    border: 8px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: #6772e5;
+    animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.sms-loading-text {
+    color: white;
+    margin-top: 20px;
+    font-size: 18px;
+    font-weight: 500;
+}
+
+/* Hide phone number */
+.phone-number.hidden {
+    display: none !important;
+}
+
+/* Responsive fixes */
+@media (max-width: 600px) {
+    .verification-card {
+        padding: 30px 24px;
+        max-width: 100%;
+        margin: 20px;
+    }
+    
+    .verification-title {
+        font-size: 24px;
+    }
+    
+    .otp-input {
+        width: 46px;
+        height: 56px;
+        font-size: 22px;
+    }
+    
+    .otp-input-container {
+        justify-content: space-around;
+    }
+    
+    .footer-links {
+        flex-direction: column;
+        gap: 12px;
+        align-items: center;
+    }
+}
+
+@media (max-width: 400px) {
+    .otp-input {
+        width: 40px;
+        height: 50px;
+        font-size: 20px;
+    }
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+    20%, 40%, 60%, 80% { transform: translateX(5px); }
+}
+
+.shake {
+    animation: shake 0.5s ease-in-out;
+}
